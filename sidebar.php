@@ -6,7 +6,7 @@
     <a href="#clients">Buxheti</a>
     <a href="#clients">Raportet</a>
     <a href="#clients">Cilësimet</a>
-    <a href="#clients">Profili</a>
+    <a href="profile.php">Profili</a>
     <br>
     <br><br>
     <a id="logout" href="logout.php">Dilni</a>
