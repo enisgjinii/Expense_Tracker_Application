@@ -235,19 +235,7 @@
 
 <body>
 
-    <div class="sidenav">
-        <img src="assets/logo.png" alt="">
-        <a href="#about">Paneli</a>
-        <a href="#services">Transaksionet</a>
-        <a href="#clients">Kategoritë</a>
-        <a href="#clients">Buxheti</a>
-        <a href="#clients">Raportet</a>
-        <a href="#clients">Cilësimet</a>
-        <a href="#clients">Profili</a>
-        <br>
-        <br><br>
-        <a id="logout" href="logout.php">Dilni</a>
-    </div>
+   <?php include('sidebar.php'); ?>
 
     <!-- Make a navbar -->
 
