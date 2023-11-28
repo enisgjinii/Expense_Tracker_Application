@@ -11,7 +11,9 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <!-- Add FavIcon -->
+    <link rel="shortcut icon" href="assets/logo.png" type="image/x-icon">
     <style>
         body {
             font-family: 'Neue Haas Grotesk', sans-serif;
@@ -175,9 +177,10 @@
                         <td><?php echo $row["category"]; ?></td>
                         <td><?php echo $row["payment_type"]; ?></td>
                         <td>
-                            <button class="view" onclick="viewExpense(<?php echo $row['id']; ?>)"><i class="fa fa-eye"></i></button>
-                            <button class="edit" onclick="editExpense(<?php echo $row['id']; ?>, '<?php echo $row['amount']; ?>', '<?php echo $row['category']; ?>', '<?php echo $row['payment_type']; ?>')"><i class="fa fa-pencil"></i></button>
-                            <button class="delete" onclick="deleteExpense(<?php echo $row['id']; ?>)"><i class="fa fa-trash"></i></button>
+                            <!-- <button class="view" onclick="viewExpense(<?php echo $row['id']; ?>)"><i class="fa fa-eye"></i></button> -->
+                            <button class="edit" onclick="editExpense(<?php echo $row['id']; ?>, '<?php echo $row['amount']; ?>', '<?php echo $row['category']; ?>', '<?php echo $row['payment_type']; ?>')"><i class="fi fi-rr-edit"></i>
+                            &nbsp Edito</button>
+                            <button class="delete" onclick="deleteExpense(<?php echo $row['id']; ?>)"><i class="fi fi-rr-trash"></i> &nbsp Fshij</button>
                         </td>
                     </tr>
                 <?php

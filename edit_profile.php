@@ -24,6 +24,27 @@ if ($result->num_rows > 0) {
     // Handle the case where the user is not found
     $user = null;
 }
+
+// Handle form submission for updating profile
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $newEmail = $_POST['new_email'];
+    // Add more fields as needed
+
+    // Update the user profile in the database
+    $updateSql = "UPDATE users SET email = '$newEmail' WHERE id = $user_id";
+
+    if ($conn->query($updateSql) === TRUE) {
+        // Update successful, refresh the user information
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            $user = $result->fetch_assoc();
+        }
+    } else {
+        // Handle the case where the update fails
+        echo "Error updating profile: " . $conn->error;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -32,7 +53,7 @@ if ($result->num_rows > 0) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
+    <title>Edit User Profile</title>
     <link href="https://fonts.cdnfonts.com/css/neue-haas-grotesk-display-pro" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
@@ -56,7 +77,30 @@ if ($result->num_rows > 0) {
             text-align: center;
         }
 
-        .button {
+        .profile-pic {
+            display: block;
+            margin: 20px auto;
+            border-radius: 50%;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
             background-color: #1ED2E7;
             color: white;
             padding: 14px 20px;
@@ -64,8 +108,11 @@ if ($result->num_rows > 0) {
             border: none;
             cursor: pointer;
             width: 100%;
-            border-radius: 10px;
-            text-decoration: none;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #1bbdcf;
         }
 
         .profile-pic {
@@ -82,25 +129,26 @@ if ($result->num_rows > 0) {
     <?php include 'navbar.php'; ?>
 
     <div class="container">
-        <h2>Profili i perdoruesit</h2>
+        <h2>Ndryshoni profilin e përdoruesit</h2>
 
         <?php if ($user) : ?>
-            <b>Adresa e email-it tuaj: </b>
-            <p><?php echo $user['email']; ?></p>
-
-            <!-- Display user profile picture -->
+            <form method="POST" action="">
+                <div class="form-group">
+                    <label for="new_email">E-mail i ri:</label>
+                    <input type="text" id="new_email" name="new_email" value="<?php echo $user['email']; ?>" required>
+                </div>
+                <button type="submit">Ruaj ndryshimet</button>
+            </form>
             <?php if ($user['profile_pic_path']) : ?>
-                <img src="<?php echo $user['profile_pic_path']; ?>" alt="Profile Picture" class="profile-pic">
+                <img class="profile-pic" src="<?php echo $user['profile_pic_path']; ?>" alt="Profile Picture">
             <?php else : ?>
                 <p>Nuk disponohet asnjë fotografi profili.</p>
             <?php endif; ?>
 
-            <br>
-            <br>
-            <!-- Example: Link to edit profile -->
-            <a class="button" href="edit_profile.php">Redakto profilin</a>
+            <!-- Example: Link to view profile -->
+            <a href="profile.php">Shiko Profilin</a>
         <?php else : ?>
-            <p>Përdoruesi nuk është gjetur.</p>
+            <p>Përdoruesi nuk u gjet.</p>
         <?php endif; ?>
     </div>
 

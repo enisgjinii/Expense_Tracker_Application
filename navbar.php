@@ -16,7 +16,7 @@
     <a href="home.php">Shtëpia</a>
     <a href="budget.php">Bugjeti</a>
     <a href="expenses.php">Shpenzimet</a>
-    <a href="#about">Profili</a>
+    <a href="profile.php">Profili</a>
     <a href="javascript:void(0);" class="icon" onclick="myFunction()">
         <i class="fa fa-bars"></i>
     </a>
