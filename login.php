@@ -3,15 +3,27 @@
 
 <head>
     <title>Login Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.cdnfonts.com/css/neue-haas-grotesk-display-pro" rel="stylesheet">
     <style>
+        * {
+            font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+
+        }
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f2f2f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
         }
 
         .container {
             max-width: 400px;
-            margin: 0 auto;
+            width: 100%;
             padding: 20px;
             background-color: #fff;
             border-radius: 5px;
@@ -30,11 +42,11 @@
             display: inline-block;
             border: 1px solid #ccc;
             box-sizing: border-box;
-            border-radius: 4px;
+            border-radius: 10px;
         }
 
         .container button {
-            background-color: #4CAF50;
+            background-color: #1ED2E7;
             color: white;
             padding: 14px 20px;
             margin: 8px 0;
@@ -45,23 +57,31 @@
         }
 
         .container button:hover {
-            background-color: #45a049;
+            background-color: #1bbdcf;
+        }
+
+
+        @media (max-width: 600px) {
+            .container {
+                max-width: none;
+                margin: 0 10px;
+            }
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h2>Login</h2>
+        <h2>Idenfitikohu</h2>
         <form method="POST" action="">
-            <label for="email">Email:</label>
-            <input type="text" id="email" name="email" required>
+            <label for="email">Adresa e email-it</label>
+            <input type="text" id="email" name="email" placeholder="Shkruani adresen tuaj" required>
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+            <label for="password">Fjalëkalimi</label>
+            <input type="password" id="password" name="password" placeholder="Shkruani fjalëkalimin tuaj" required>
 
-            <button type="submit">Login</button>
-            <button type="button" onclick="window.location.href = 'signup.php';">Signup</button>
+            <button type="submit">Kyçu</button>
+            <p style="text-align: right;cursor:pointer" type="button" onclick="window.location.href = 'signup.php';">Regjistrohu</p>
 
         </form>
     </div>
@@ -102,6 +122,7 @@
                 // Set session variables
                 $_SESSION['user_id'] = $row['id'];
                 $_SESSION['email'] = $email;
+                $_SESSION['login_time'] = time(); // Set the login time
 
                 // Redirect to the home page or perform any necessary actions
                 header("Location: home.php");
