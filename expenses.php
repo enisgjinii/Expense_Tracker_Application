@@ -13,6 +13,14 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
+        body {
+            font-family: 'Neue Haas Grotesk', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f4f4f4;
+        }
+
         .container {
             max-width: 800px;
             margin: 20px auto;
@@ -29,16 +37,15 @@
             border-collapse: collapse;
         }
 
-        table,
         th,
         td {
             border: 1px solid #ccc;
+            padding: 12px;
+            text-align: left;
         }
 
-        th,
-        td {
-            padding: 10px;
-            text-align: left;
+        th {
+            background-color: #f2f2f2;
         }
 
         button {
@@ -46,6 +53,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin-right: 5px;
         }
 
         button.view {
@@ -53,11 +61,15 @@
             color: white;
         }
 
+        button.edit {
+            background-color: #2196F3;
+            color: white;
+        }
+
         button.delete {
             background-color: #f44336;
             color: white;
         }
-
 
         /* Animation */
         @keyframes fadeIn {
@@ -67,6 +79,65 @@
 
             to {
                 opacity: 1;
+            }
+        }
+
+        #editForm {
+            display: none;
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        #editForm input {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        #editForm button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        #editForm button:hover {
+            background-color: #45a049;
+        }
+
+        input,
+        select,
+        button {
+            width: auto;
+            margin-top: 5px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* Responsive styles */
+        @media screen and (max-width: 600px) {
+            .container {
+                width: 90%;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            button {
+                width: 100%;
+                margin-bottom: 10px;
             }
         }
     </style>
@@ -85,6 +156,7 @@
     ?>
         <div class="container">
             <h2>Lista e Shpenzimeve</h2>
+            <span> Numri total i shpenzimeve : <?php echo $result->num_rows; ?></span>
             <table>
                 <tr>
                     <th>ID</th>
@@ -103,8 +175,9 @@
                         <td><?php echo $row["category"]; ?></td>
                         <td><?php echo $row["payment_type"]; ?></td>
                         <td>
-                            <button class="view" onclick="viewExpense(<?php echo $row['id']; ?>)">Shiko</button>
-                            <button class="delete" onclick="deleteExpense(<?php echo $row['id']; ?>)">Fshij</button>
+                            <button class="view" onclick="viewExpense(<?php echo $row['id']; ?>)"><i class="fa fa-eye"></i></button>
+                            <button class="edit" onclick="editExpense(<?php echo $row['id']; ?>, '<?php echo $row['amount']; ?>', '<?php echo $row['category']; ?>', '<?php echo $row['payment_type']; ?>')"><i class="fa fa-pencil"></i></button>
+                            <button class="delete" onclick="deleteExpense(<?php echo $row['id']; ?>)"><i class="fa fa-trash"></i></button>
                         </td>
                     </tr>
                 <?php
@@ -112,32 +185,64 @@
                 ?>
             </table>
         </div>
+        <form id="editForm" style="display: none;" method="post" action="editExpense.php">
+            <input type="hidden" id="editExpenseId" name="expenseId">
+            <label for="editAmount">Shuma:</label>
+            <input type="text" id="editAmount" name="amount"><br><br>
+
+            <!-- Dropdown for Kategoria -->
+            <label for="editCategory"> Kategoria: </label><br>
+            <select id="editCategory" name="category">
+                <?php
+                // Retrieve the list of categories from the database
+                $categoryResult = $conn->query("SELECT * FROM categories");
+
+                // Loop through the categories and create an option for each one
+                while ($categoryRow = $categoryResult->fetch_assoc()) {
+                ?>
+                    <option value="<?php echo $categoryRow['name']; ?>"><?php echo $categoryRow['name']; ?></option>
+                <?php
+                }
+                ?>
+            </select><br><br>
+
+            <!-- Dropdown for Lloji i Pagesës -->
+            <label for="editPaymentType">Lloji i Pagesës:</label> <br>
+            <select id="editPaymentType" name="paymentType">
+                <option value="Para ne duar">Para ne duar</option>
+                <option value="Kartë Krediti">Kartë Krediti</option>
+                <!-- <option value="debit_card">Kartë Debiti</option> -->
+            </select><br>
+
+            <button type="submit">Ruaj ndryshimet</button>
+        </form>
 
         <script>
-            // Function to view expense details
-            function viewExpense(expenseId) {
-                // Implement the code to view expense details (e.g., using SweetAlert2)
-                Swal.fire({
-                    title: 'Expense Details',
-                    html: `<p>Amount: ${amount}</p>
-                           <p>Category: ${category}</p>
-                           <p>Payment Type: ${paymentType}</p>
-                           <p>Receipt Image: <img src="${receiptPath}" alt="Receipt" style="max-width: 100%;"></p>`,
-                    confirmButtonText: 'OK',
-                });
-            }
+            // Function to edit expense details
+            function editExpense(expenseId, amount, category, paymentType) {
+                // Set the values in the form
+                document.getElementById('editExpenseId').value = expenseId;
+                document.getElementById('editAmount').value = amount;
+                document.getElementById('editCategory').value = category;
+                document.getElementById('editPaymentType').value = paymentType;
 
+                // Show the edit form
+                document.getElementById('editForm').style.display = 'block';
+            }
+        </script>
+
+        <script>
             // Function to delete expense
             function deleteExpense(expenseId) {
                 // Implement the code to delete expense (e.g., using SweetAlert2 for confirmation)
                 Swal.fire({
-                    title: 'Are you sure?',
-                    text: 'You won\'t be able to revert this!',
+                    title: 'A je i sigurt?',
+                    text: 'Ju nuk do të jeni në gjendje ta ktheni këtë!',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
+                    confirmButtonText: 'Po, fshijeni!'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         // Perform the deletion using PHP (server-side)
@@ -151,7 +256,7 @@
         echo "<div class='container'>Asnjë shpenzim nuk u gjet.</div>";
     }
     ?>
-
+    <?php include 'footer.php'; ?>
 </body>
 
 </html>

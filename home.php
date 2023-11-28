@@ -54,6 +54,30 @@
             border-collapse: collapse;
         }
 
+        /* file upload button */
+        input[type="file"]::file-selector-button {
+            border-radius: 4px;
+            padding: 0 16px;
+            height: 40px;
+            cursor: pointer;
+            background-color: white;
+            border: 1px solid rgba(0, 0, 0, 0.16);
+            box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
+            margin-right: 16px;
+            transition: background-color 200ms;
+        }
+
+        /* file upload button hover state */
+        input[type="file"]::file-selector-button:hover {
+            background-color: #f3f4f6;
+        }
+
+        /* file upload button active state */
+        input[type="file"]::file-selector-button:active {
+            background-color: #e5e7eb;
+        }
+
+        /* ------------------------ */
         table,
         th,
         td {
@@ -253,7 +277,8 @@
                 echo "<tr><th>ID</th><th>Shuma</th><th>Kategoria</th><th>Lloji i Pagesës</th><th>Fatura</th></tr>";
 
                 while ($row = $result->fetch_assoc()) {
-                    echo "<tr><td>" . $row["id"] . "</td><td>" . $row["amount"] . "</td><td>" . $row["category"] . "</td><td>" . $row["payment_type"] . "</td><td><a href='" . $row["receipt_path"] . "' target='_blank'>Shiko Faturën</a></td></tr>";
+                    echo "<tr><td>" . $row["id"] . "</td><td>" . $row["amount"] . "</td><td>" . $row["category"] . "</td><td>" . $row["payment_type"] . "</td><td><a style='border: none;text-decoration: none ; color: black;padding: 5px;border-radius: 5px;
+                background-color: white   ;border: 1px solid #ccc;box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);' href='" . $row["receipt_path"] . "' target='_blank'>Shiko Faturën</a></td></tr>";
                 }
 
                 echo "</table>";
