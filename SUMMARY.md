@@ -1,3 +1,4 @@
 # Table of contents
 
-* [Page](README.md)
+* [Shtëpia](README.md)
+* [Shtëpia](shtepia-1.md)
