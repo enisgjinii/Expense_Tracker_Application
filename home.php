@@ -1,3 +1,4 @@
+<?php include 'check_auth.php'; ?>
 <!DOCTYPE html>
 <html lang="sq">
 
@@ -244,7 +245,7 @@
                     <option value="debit_card">Kartë Debiti</option>
                 </select>
 
-               
+
                 <label for="receipt">Ngarko faturën (imazh):</label>
                 <br><br><br>
                 <input type="file" id="receipt" name="receipt" accept="image/*" required>
