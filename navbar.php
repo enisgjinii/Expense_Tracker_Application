@@ -1,34 +1,11 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-    </style>
-</head>
-
-
-<div class="topnav" id="myTopnav">
-    <a href="home.php">Shtëpia</a>
-    <a href="budget.php">Bugjeti</a>
-    <a href="expenses.php">Shpenzimet</a>
-    <a href="profile.php">Profili</a>
-    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
-        <i class="fa fa-bars"></i>
+<div class="navbar" id="myNavbar">
+    <a href="index.php" class="active">Ballina</a>
+    <a href="about.php">Rreth Nesh</a>
+    <a href="expense.php">Expense Tracker</a>
+    <a href="contact.php">Na Kontaktoni</a>
+    <a href="javascript:void(0);" class="icon" onclick="toggleNavbar()">
+        &#9776;
     </a>
+    <a href="login.php">Login</a>
+    <a href="signup.php">Sign Up</a>
 </div>
-
-<script>
-    function myFunction() {
-        var x = document.getElementById("myTopnav");
-        if (x.className === "topnav") {
-            x.className += " responsive";
-        } else {
-            x.className = "topnav";
-        }
-    }
-</script>

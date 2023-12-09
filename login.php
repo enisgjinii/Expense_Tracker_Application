@@ -73,9 +73,10 @@
 <body>
     <div class="container">
         <h2>Idenfitikohu</h2>
-        <form method="POST" action="">
+        <form method="POST" action="" onsubmit="return validateForm()">
             <label for="email">Adresa e email-it</label>
             <input type="text" id="email" name="email" placeholder="Shkruani adresen tuaj" required>
+            <span id="emailError" style="color: red;"></span>
 
             <label for="password">Fjalëkalimi</label>
             <input type="password" id="password" name="password" placeholder="Shkruani fjalëkalimin tuaj" required>
@@ -139,7 +140,20 @@
         mysqli_close($conn);
     }
     ?>
+    <script>
+        function validateForm() {
+            let emailRegex = /[a-zA-Z.-_]+@+[a-z]+\.+[a-z]{2,3}$/;
 
+            emailError.innerText = '';
+
+            if (!emailRegex.test(email.value)) {
+                emailError.innerText = 'Invalid email';
+                return false;
+            }
+
+            return true;
+        }
+    </script>
 </body>
 
 </html>

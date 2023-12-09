@@ -2,13 +2,12 @@
 <html>
 
 <head>
-    <title>Signup Page</title>
+    <title>Faqja e Regjistrimit</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.cdnfonts.com/css/neue-haas-grotesk-display-pro" rel="stylesheet">
     <style>
         * {
             font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
-
         }
 
         body {
@@ -93,7 +92,7 @@
 <body>
     <div class="container">
         <h2>Regjistrohu</h2>
-        <form method="POST" action="" enctype="multipart/form-data">
+        <form method="POST" action="" enctype="multipart/form-data" onsubmit="return validateForm()">
 
             <label for="email">Adresa e email-it</label>
             <input type="text" id="email" name="email" placeholder="Shkruani adresen tuaj" required>
@@ -106,85 +105,41 @@
 
             <button type="submit">Regjistrohu</button>
             <p style="text-align: right; cursor:pointer" type="button" onclick="window.location.href = 'login.php';">Kyçu</p>
-
         </form>
     </div>
 
-    <?php
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-
-        // Hash the password using Argon2
-        $hashedPassword = password_hash($password, PASSWORD_ARGON2I);
-
-        // Handle file upload
-        $targetDirectory = "uploads/uploads_profile_pics/";  // Create a directory named "uploads" to store the uploaded files
-        $targetFile = $targetDirectory . basename($_FILES["profile_pic"]["name"]);
-        $uploadOk = 1;
-        $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
-
-        // Check if image file is a actual image or fake image
-        if (isset($_POST["submit"])) {
-            $check = getimagesize($_FILES["profile_pic"]["tmp_name"]);
-            if ($check !== false) {
-                echo "File is an image - " . $check["mime"] . ".";
-                $uploadOk = 1;
-            } else {
-                echo "File is not an image.";
-                $uploadOk = 0;
+    <script>
+        function validateForm() {
+            // Validate email
+            let emailInput = document.getElementById('email');
+            let emailRegex = /[a-zA-Z.-_]+@+[a-z]+\.+[a-z]{2,3}$/;
+            if (!emailRegex.test(emailInput.value)) {
+                alert('Email i pavlefshëm');
+                return false;
             }
-        }
 
-
-        // Allow certain file formats
-        $allowedFormats = ["jpg", "jpeg", "png", "gif"];
-        if (!in_array($imageFileType, $allowedFormats)) {
-            echo "Sorry, only JPG, JPEG, PNG, and GIF files are allowed.";
-            $uploadOk = 0;
-        }
-
-        // Check if $uploadOk is set to 0 by an error
-        if ($uploadOk == 0) {
-            echo "Sorry, your file was not uploaded.";
-        } else {
-            // if everything is ok, try to upload file
-            if (move_uploaded_file($_FILES["profile_pic"]["tmp_name"], $targetFile)) {
-                echo "The file " . htmlspecialchars(basename($_FILES["profile_pic"]["name"])) . " has been uploaded.";
-            } else {
-                echo "Sorry, there was an error uploading your file.";
+            // Validate password
+            let passwordInput = document.getElementById('password');
+            if (passwordInput.value.length < 6) {
+                alert('Fjalëkalimi duhet të jetë të paktën 6 karaktere');
+                return false;
             }
+
+            // Validate profile picture (optional)
+            let profilePicInput = document.getElementById('profile_pic');
+            if (profilePicInput.value) {
+                let allowedFormats = ["jpg", "jpeg", "png", "gif"];
+                let fileExtension = profilePicInput.value.split('.').pop().toLowerCase();
+                if (!allowedFormats.includes(fileExtension)) {
+                    alert('Format i pavlefshëm i skedarit. Formate të lejuara: JPG, JPEG, PNG, GIF');
+                    return false;
+                }
+            }
+
+            // Form is valid
+            alert('Forma është e vlefshme');
         }
-
-        // Perform any necessary validation and database operations
-        // Replace the following code with your actual logic to handle the signup process
-
-        // Example code to insert the user into a database
-        $dbHost = 'localhost';
-        $dbUser = 'root';
-        $dbPassword = '';
-        $dbName = 'expense_tracker';
-
-        $conn = mysqli_connect($dbHost, $dbUser, $dbPassword, $dbName);
-
-        // Check connection
-        if (!$conn) {
-            die("Connection failed: " . mysqli_connect_error());
-        }
-
-        $profilePicPath = $targetFile; // Set the path to the uploaded profile picture
-
-        $sql = "INSERT INTO users (email, password_hash, profile_pic_path) VALUES ('$email', '$hashedPassword', '$profilePicPath')";
-
-        if (mysqli_query($conn, $sql)) {
-            echo "<p>Signup successful!</p>";
-        } else {
-            echo "<p>Error: " . mysqli_error($conn) . "</p>";
-        }
-
-        mysqli_close($conn);
-    }
-    ?>
+    </script>
 </body>
 
 </html>

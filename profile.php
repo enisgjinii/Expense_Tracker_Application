@@ -56,7 +56,7 @@ if ($result->num_rows > 0) {
             text-align: center;
         }
 
-        .button {
+        button {
             background-color: #1ED2E7;
             color: white;
             padding: 14px 20px;
