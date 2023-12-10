@@ -19,31 +19,6 @@
         <p>Angazhimi ynë është të ndihmojmë ju të merrni vendime financiare të informuara dhe të jeni në kontroll të plotë të financave tuaja.</p>
         <p>Me një vizion për të lehtësuar jetën financiare të përdoruesve tanë, ne jemi këtu për ju çdo hap në rrugën tuaj financiare.</p>
     </section>
-    <section id="team">
-        <h2>Ekipi ynë</h2>
-
-        <div class="team-member-card">
-            <img src="path/to/team-member-1.jpg" alt="Team Member 1">
-            <div class="card-content">
-                <h3>Emri i Ekipit 1</h3>
-                <p>Pozicioni: Zhvillues</p>
-                <p>Përshkrimi: Këtu mund të shtoni një përshkrim të detajuar të anëtarit të ekipit.</p>
-            </div>
-        </div>
-
-        <div class="team-member-card">
-            <img src="path/to/team-member-2.jpg" alt="Team Member 2">
-            <div class="card-content">
-                <h3>Emri i Ekipit 2</h3>
-                <p>Pozicioni: Dizajner</p>
-                <p>Përshkrimi: Këtu mund të shtoni një përshkrim të detajuar të anëtarit të ekipit.</p>
-            </div>
-        </div>
-
-        <!-- Add more team members as needed -->
-
-    </section>
-
     <section id="mission">
         <h2>Misioni ynë</h2>
         <p>Misioni ynë është të sjellim inovacion në menaxhimin e financave të përdoruesve tanë duke ofruar zgjidhje të thjeshta, efikase dhe të përshtatshme.</p>
@@ -52,7 +27,7 @@
     </section>
 
     <footer>
-        <p>&copy; 2023 Kompania Juaj. Të gjitha të drejtat e rezervuara.</p>
+        <p>&copy; 2023 Expense Tracker. Të gjitha të drejtat e rezervuara.</p>
     </footer>
 
     <script src="js/script.js"></script>

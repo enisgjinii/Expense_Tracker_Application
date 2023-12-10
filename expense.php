@@ -17,7 +17,7 @@
         <div class="slider-container">
             <div id="kontenti">
                 <header>
-                    <img id="slideshow" style="width:250px; object-fit: contain; height: 250px;" />
+                    <img id="slideshow" style="width:800px; object-fit: contain; height: 250px;" />
                 </header>
                 <br>
                 <button onclick="changeImg(-1)">Prapa</button>
@@ -51,37 +51,16 @@
                 <li><a href="#">Google Play</a></li>
             </ul>
         </section>
-
-        <!-- Testimonials Section -->
-        <section id="testimonials">
-            <h3>Çfarë Përdoruesit Thonë</h3>
-            <div class="testimonial">
-                <p>"Aplikacioni Juaj i Shpenzimeve ka bërë menaxhimin e financave të lehtë. Rekomandohet shumë!"</p>
-                <p>- Jane Doe</p>
-            </div>
-            <div class="testimonial">
-                <p>"E dua veçorinë e buxhetimit. Më ka ndihmuar të kursaroj para dhe të arrij qëllimet e mia financiare."</p>
-                <p>- John Smith</p>
-            </div>
-        </section>
-
-        <!-- Additional Sections -->
-        <section id="additional-section">
-            <h2>Seksione Shtesë</h2>
-            <p>Këtu mund të shtoni informacione shtesë për aplikacionin tuaj të shpenzimeve.</p>
-            <!-- Add more content as needed -->
-        </section>
-
     </section>
 
     <footer>
-        <p>&copy; 2023 Kompania Juaj. Të gjitha të drejtat e rezervuara.</p>
+        <p>&copy; 2023 Expense Tracker. Të gjitha të drejtat e rezervuara.</p>
     </footer>
 
     <script src="js/script.js"></script>
     <script>
         let i = 0;
-        let imgArray = ["assets/logo.png", "assets/jonas-verstuyft-Pp6efQ_ghiA-unsplash.jpg", "assets/logo.png", "assets/logo.png"];
+        let imgArray = ["assets/Ballina Mockup Laptop.jpeg", "assets/Ballina Mockup Mobile.jpeg", "assets/Expense Tracker Mockup Laptop.jpeg", "assets/Expense Tracker Mockup Mobile.jpeg", "assets/Identifikohu Mockup Laptop.jpeg", "assets/Identifikohu Mockup Mobile.jpeg", "assets/Na Kontaktoni Mockup Laptop.jpeg", "assets/Na Kontaktoni Mockup Mobile.jpeg"];
         let slideshow = document.getElementById("slideshow");
 
         function changeImg(direction) {

@@ -45,7 +45,7 @@
     </section>
 
     <footer>
-        <p>&copy; 2023 Kompania Juaj. Të gjitha të drejtat e rezervuara.</p>
+        <p>&copy; 2023 Expense Tracker. Të gjitha të drejtat e rezervuara.</p>
     </footer>
 
     <script src="js/script.js"></script>
