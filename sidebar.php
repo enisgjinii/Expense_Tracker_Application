@@ -3,7 +3,7 @@
         <div class="image-text">
             <br>
             <span class="image">
-                <img src="logo.png" alt="">
+                <img src="assets/logo.png" alt="">
             </span>
         </div>
 
