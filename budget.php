@@ -1,226 +1,294 @@
+<?php
+session_start();
+
+// Include the connection file
+include 'conn.php';
+
+// Check if the user is not logged in
+if (empty($_SESSION['user_id'])) {
+    // Redirect to the login page
+    header('Location: login.php');
+    exit();
+}
+
+
+
+function displaySuccessAlert($message)
+{
+    echo "<script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: '$message',
+            });
+         </script>";
+}
+
+function displayErrorAlert($message)
+{
+    echo "<script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: '$message',
+            });
+         </script>";
+}
+
+function uploadFile($target_dir)
+{
+    $target_file = $target_dir . basename($_FILES["receipt"]["name"]);
+    $uploadOk = 1;
+    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+    $check = getimagesize($_FILES["receipt"]["tmp_name"]);
+    if ($check !== false) {
+        if (!in_array($imageFileType, ["jpg", "png", "jpeg", "gif"])) {
+            displayErrorAlert("Sorry, only JPG, JPEG, PNG & GIF files are allowed.");
+            $uploadOk = 0;
+        }
+    } else {
+        displayErrorAlert("File is not an image.");
+        $uploadOk = 0;
+    }
+
+    if ($uploadOk == 1 && move_uploaded_file($_FILES["receipt"]["tmp_name"], $target_file)) {
+        return $target_file;
+    } else {
+        displayErrorAlert("Sorry, there was an error uploading your file.");
+        return false;
+    }
+}
+
+function addExpense($amount, $category, $payment_type, $receipt_path)
+{
+    global $conn;
+
+    $sql = "INSERT INTO expenses (amount, category, payment_type, receipt_path, client_id) VALUES ('$amount', '$category', '$payment_type', '$receipt_path','$_SESSION[user_id]')";
+
+    if ($conn->query($sql) === TRUE) {
+        displaySuccessAlert("Shpenzimet janë shtuar me sukses.");
+    } else {
+        displayErrorAlert("Shpenzimet nuk mund të shtoheshin. Ju lutemi provoni përsëri.");
+    }
+}
+
+function addCategory($new_category)
+{
+    global $conn;
+
+    $sql = "INSERT INTO categories (name) VALUES ('$new_category')";
+
+    if ($conn->query($sql) === TRUE) {
+        displaySuccessAlert("Kategoria është krijuar me sukses.");
+    } else {
+        displayErrorAlert("Kategoria nuk mund të krijohej. Ju lutemi provoni përsëri.");
+    }
+}
+
+function deleteExpense($expense_id_to_delete)
+{
+    global $conn;
+
+    $delete_sql = "DELETE FROM expenses WHERE id = ?";
+    $delete_stmt = $conn->prepare($delete_sql);
+    $delete_stmt->bind_param("i", $expense_id_to_delete);
+
+    if ($delete_stmt->execute()) {
+        displaySuccessAlert("Expense deleted successfully.");
+    } else {
+        displayErrorAlert("Error deleting expense. Please try again.");
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['amount'], $_POST['category'], $_POST['payment_type'])) {
+        $amount = $_POST['amount'];
+        $category = $_POST['category'];
+        $payment_type = $_POST['payment_type'];
+
+        $target_dir = "uploads/";
+        $receipt_path = uploadFile($target_dir);
+
+        if ($receipt_path) {
+            addExpense($amount, $category, $payment_type, $receipt_path);
+        }
+    } elseif (isset($_POST['new_category'])) {
+        $new_category = $_POST['new_category'];
+        addCategory($new_category);
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_expense'])) {
+    $expense_id_to_delete = $_POST['expense_id'];
+    deleteExpense($expense_id_to_delete);
+}
+?>
+
+
 <!DOCTYPE html>
-<html lang="sq">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Regjistruesi i Shpenzimeve - Buxheti</title>
-    <link href="https://fonts.cdnfonts.com/css/neue-haas-grotesk-display-pro" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <style>
-        /* Budget.php */
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            animation: fadeIn 1s ease-in-out;
-        }
-
-        h2 {
-            text-align: center;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-            margin-top: 20px;
-        }
-
-        label {
-            margin-top: 10px;
-        }
-
-        input,
-        button {
-            margin-top: 5px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        table {
-            width: 100%;
-            margin-top: 20px;
-            border-collapse: collapse;
-        }
-
-        table,
-        th,
-        td {
-            border: 1px solid #ccc;
-        }
-
-        th,
-        td {
-            padding: 10px;
-            text-align: left;
-        }
-
-        /* Responsive layout */
-        @media (max-width: 768px) {
-            .container {
-                max-width: 100%;
-            }
-        }
-
-        /* Animation */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style_client.css">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
 </head>
 
 <body>
-    <?php
-    include 'navbar.php';
-    include 'conn.php';
+    <?php include 'sidebar.php'; ?>
 
-    // Function to calculate total expenses
-    function getTotalExpenses($conn)
-    {
-        $result = $conn->query("SELECT SUM(amount) as total FROM expenses");
-        $row = $result->fetch_assoc();
-        return $row['total'] ?? 0;
-    }
+    <section class="home">
+        <div class="text">Bugjeti</div>
+        <div class="text">
+            <div class="tab">
+                <button class="tablinks" onclick="openCity(event, 'listaTeArdhurave')">Lista e të ardhurave</button>
+                <button class="tablinks" onclick="openCity(event, 'listaShpenzimeve')">Lista e shpenzimeve</button>
+                <button class="tablinks" onclick="openCity(event, 'kategorit')">Kategorit</button>
+            </div>
 
-    // Function to calculate total income
-    function getTotalIncome($conn)
-    {
-        $result = $conn->query("SELECT SUM(amount) as total FROM income");
-        $row = $result->fetch_assoc();
-        return $row['total'] ?? 0;
-    }
+            <div id="listaTeArdhurave" class="tabcontent">
+                <?php
 
-    // Process income form
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['income_amount'])) {
-        $income_amount = $_POST['income_amount'];
-        $sql = "INSERT INTO income (amount) VALUES ('$income_amount')";
+                $sql = "SELECT * FROM income WHERE client_id = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("i", $_SESSION['user_id']);
+                $stmt->execute();
+                $result = $stmt->get_result();
 
-        if ($conn->query($sql) === TRUE) {
-            // echo "Income added successfully.";
-        } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
-        }
-    }
-    ?>
+                // Sum 
+                $sql_amount = "SELECT SUM(amount) AS total FROM income WHERE client_id = ?";
+                $stmt_amount = $conn->prepare($sql_amount);
+                $stmt_amount->bind_param("i", $_SESSION['user_id']);
+                $stmt_amount->execute();
+                $result_amount = $stmt_amount->get_result();
 
-    <div class="container">
-        <h2>Regjistruesi i Buxhetit</h2>
-        <div>
-            <form method="POST" action="">
-                <label for="income_amount">Totali i Te Ardhurave:</label>
-                <input type="number" id="income_amount" name="income_amount" required>
-                <div>
-                    <button type="submit">Shto te ardhura</button>
-                </div>
-            </form>
-        </div>
+                ?>
+                <br>
+                <h6>Totali i të ardhurave: <?php echo $result_amount->fetch_assoc()['total']; ?></h6>
+                <br>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Totali</th>
+                        </tr>
+                    </thead>
 
-        <div>
-            <h2>Shpenzimet</h2>
-            <?php
-            // Display Expenses
-            $result = $conn->query("SELECT * FROM expenses");
+                    <tbody>
+                        <?php
 
-            if ($result->num_rows > 0) {
-                echo "<table>";
-                echo "<tr><th>ID</th><th>Shuma</th><th>Kategoria</th><th>Lloji i Pagesës</th></tr>";
 
-                while ($row = $result->fetch_assoc()) {
-                    echo "<tr><td>" . $row["id"] . "</td><td>" . $row["amount"] . "</td><td>" . $row["category"] . "</td><td>" . $row["payment_type"] . "</td></tr>";
-                }
 
-                echo "</table>";
-            } else {
-                echo "Asnjë shpenzim nuk u gjet.";
-            }
-            ?>
-        </div>
+                        while ($row = $result->fetch_assoc()) {
+                            $id = $row['id'];
+                            $amount = $row['amount'];
+                        ?>
+                            <tr>
+                                <td><?php echo $id; ?></td>
+                                <td><?php echo $amount; ?></td>
 
-        <div>
-            <h2>Te Ardhurat</h2>
-            <?php
-            // Display Income
-            $result = $conn->query("SELECT * FROM income");
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
 
-            if ($result->num_rows > 0) {
-                echo "<table>";
-                echo "<tr><th>ID</th><th>Shuma</th></tr>";
+            <div id="listaShpenzimeve" class="tabcontent">
+                <?php
+                // Sum 
+                $sql_amount = "SELECT SUM(amount) AS total FROM expenses WHERE client_id = ?";
+                $stmt_amount = $conn->prepare($sql_amount);
+                $stmt_amount->bind_param("i", $_SESSION['user_id']);
+                $stmt_amount->execute();
+                $result_amount = $stmt_amount->get_result();
 
-                while ($row = $result->fetch_assoc()) {
-                    echo "<tr><td>" . $row["id"] . "</td><td>" . $row["amount"] . "</td></tr>";
-                }
+                ?>
+                <br>
+                <h6>Totali i Shpenzimeve: <?php echo $result_amount->fetch_assoc()['total']; ?></h6>
+                <br>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kategoria</th>
+                            <th>Lloji i pagesës</th>
+                            <th>Shuma</th>
+                        </tr>
+                    </thead>
 
-                echo "</table>";
-            } else {
-                echo "Asnjë te ardhur nuk u gjet.";
-            }
-            ?>
-        </div>
+                    <tbody>
+                        <?php
 
-        <div>
-            <h2>Buxheti</h2>
-            <?php
-            $totalIncome = getTotalIncome($conn);
-            $totalExpenses = getTotalExpenses($conn);
-            $budgetSummary = $totalIncome - $totalExpenses;
+                        $sql = "SELECT * FROM expenses WHERE client_id = ?";
+                        $stmt = $conn->prepare($sql);
+                        $stmt->bind_param("i", $_SESSION['user_id']);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
 
-            echo "<p>Totali i Te Ardhurave: $totalIncome</p>";
-            echo "<p>Totali i Shpenzimeve: $totalExpenses</p>";
-            echo "<p>Përmbledhja e buxhetit: $budgetSummary</p>";
-            ?>
-        </div>
-        <div class="container">
-            <canvas id="budgetChart"></canvas>
-        </div>
+                        while ($row = $result->fetch_assoc()) {
+                            $category = $row['category'];
+                            $payment_type = $row['payment_type'];
+                            $amount = $row['amount'];
+                        ?>
+                            <tr>
+                                <td><?php echo $category; ?></td>
+                                <td><?php echo $payment_type; ?></td>
+                                <td><?php echo $amount; ?></td>
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
 
-    </div>
+            <div id="kategorit" class="tabcontent">
+                <?php
 
-    <?php include 'footer.php'; ?>
-    <script>
-        // Chart.js
-        var ctx = document.getElementById('budgetChart').getContext('2d');
-        var chart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Të ardhurat', 'Shpenzimet'],
-                datasets: [{
-                    label: 'Statistikat',
-                    data: [<?php echo $totalIncome; ?>, <?php echo $totalExpenses; ?>],
-                    backgroundColor: [
-                        'rgba(75, 192, 192, 0.7)',
-                        'rgba(255, 99, 132, 0.7)',
-                    ],
-                    borderColor: [
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(255, 99, 132, 1)',
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+                // Display Categories
+                $result = $conn->query("SELECT * FROM categories");
+
+                if ($result->num_rows > 0) {
+                    echo "<h5>Kategoritë</h5>";
+                    echo "<table>";
+                    echo "<tr><th>ID</th><th>Emri</th></tr>";
+
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr><td>" . $row["id"] . "</td><td>" . $row["name"] . "</td></tr>";
                     }
+
+                    echo "</table>";
+                } else {
+                    echo "Asnjë kategori nuk u gjet.";
+                } ?>
+            </div>
+        </div>
+
+
+
+        <script>
+            function openCity(evt, cityName) {
+                var i, tabcontent, tablinks;
+                tabcontent = document.getElementsByClassName("tabcontent");
+                for (i = 0; i < tabcontent.length; i++) {
+                    tabcontent[i].style.display = "none";
                 }
+                tablinks = document.getElementsByClassName("tablinks");
+                for (i = 0; i < tablinks.length; i++) {
+                    tablinks[i].className = tablinks[i].className.replace(" active", "");
+                }
+                document.getElementById(cityName).style.display = "block";
+                evt.currentTarget.className += " active";
             }
-        });
-    </script>
+        </script>
+    </section>
+
+    <script src="script.js"></script>
+
 </body>
 
 </html>

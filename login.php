@@ -126,7 +126,7 @@
                 $_SESSION['login_time'] = time(); // Set the login time
 
                 // Redirect to the home page or perform any necessary actions
-                header("Location: home.php");
+                header("Location: expenses.php");
                 exit();
             } else {
                 // Invalid password

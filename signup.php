@@ -92,7 +92,7 @@
 <body>
     <div class="container">
         <h2>Regjistrohu</h2>
-        <form method="POST" action="" enctype="multipart/form-data" onsubmit="return validateForm()">
+        <form method="POST" action="registration_process.php" enctype="multipart/form-data" onsubmit="return validateForm()">
 
             <label for="email">Adresa e email-it</label>
             <input type="text" id="email" name="email" placeholder="Shkruani adresen tuaj" required>

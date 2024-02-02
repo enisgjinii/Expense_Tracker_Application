@@ -10,7 +10,6 @@ if (empty($_SESSION['user_id'])) {
     header('Location: login.php');
     exit();
 }
-
 function displaySuccessAlert($message)
 {
     echo "<script>
@@ -84,11 +83,11 @@ function addCategory($new_category)
     }
 }
 
-function deleteExpense($expense_id_to_delete)
+function deleteIncome($expense_id_to_delete)
 {
     global $conn;
 
-    $delete_sql = "DELETE FROM expenses WHERE id = ?";
+    $delete_sql = "DELETE FROM income WHERE id = ?";
     $delete_stmt = $conn->prepare($delete_sql);
     $delete_stmt->bind_param("i", $expense_id_to_delete);
 
@@ -117,9 +116,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_expense'])) {
-    $expense_id_to_delete = $_POST['expense_id'];
-    deleteExpense($expense_id_to_delete);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_income'])) {
+    $expense_id_to_delete = $_POST['income_id'];
+    deleteIncome($expense_id_to_delete);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['income_amount'])) {
+    $income_amount = $_POST['income_amount'];
+    $sql = "INSERT INTO income (amount, client_id) VALUES ('$income_amount','$_SESSION[user_id]')";
+
+    if ($conn->query($sql) === TRUE) {
+        header("Location: income.php");
+        exit();
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
 }
 ?>
 
@@ -139,90 +150,74 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_expense'])) {
     <?php include 'sidebar.php'; ?>
 
     <section class="home">
-        <div class="text">Shpenzimet</div>
+        <div class="text">Të ardhurat</div>
         <div class="text">
             <div class="tab">
-                <button class="tablinks" onclick="openCity(event, 'regjistrimiShpenzimeve')">Regjistruesi i Shpenzimeve</button>
-                <button class="tablinks" onclick="openCity(event, 'listaShpenzimeve')">Lista e shpenzimeve</button>
+                <button class="tablinks" onclick="tabsStates(event, 'regjistrimiTeArdhurave')">Regjistruesi i të ardhurave</button>
+                <button class="tablinks" onclick="tabsStates(event, 'listaTeArdhurave')">Lista e të ardhurave</button>
             </div>
 
-            <div id="regjistrimiShpenzimeve" class="tabcontent">
+            <div id="regjistrimiTeArdhurave" class="tabcontent">
                 <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id']; ?>">
-                <h5>Regjistruesi i Shpenzimeve</h5>
-                <form method="POST" action="" enctype="multipart/form-data" style="display: flex; flex-direction: column;font-size: 20px">
-                    <div>
-                        <label for="amount">Shuma:</label>
-                        <input type="number" id="amount" name="amount" required>
-                    </div>
-                    <div>
-                        <label for="category">Kategoria:</label>
-                        <select id="category" name="category" required>
-                            <?php
-                            // Retrieve the list of categories from the database
-                            $sql = "SELECT * FROM categories";
-                            $result = $conn->query($sql);
-
-                            // Loop through the categories and create an option for each one
-                            while ($row = $result->fetch_assoc()) {
-                            ?>
-                                <option value="<?php echo $row['name']; ?>"><?php echo $row['name']; ?></option>
-                            <?php
-                            }
-                            ?>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="payment_type">Lloji i Pagesës:</label>
-                        <select id="payment_type" name="payment_type" required>
-                            <option value="Para ne duar">Para ne duar</option>
-                            <option value="Kartë Krediti ">Kartë Krediti</option>
-                            <option value="Kartë Debiti">Kartë Debiti</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="receipt">Ngarko faturën (imazh):</label>
-                        <input type="file" id="receipt" name="receipt" accept="image/*" required>
-                    </div>
-                    <div>
-                        <button type="submit" style="font-size: 20px; padding: 10px; margin-top: 10px; background-color: white;border: 1px solid transparent;">Shto shpenzim</button>
-                    </div>
-                </form>
+                <h5>Regjistruesi i të ardhurave</h5>
+                <div>
+                    <form method="POST" action="" style="font-size: 20px;">
+                        <div>
+                            <label for="income_amount">Totali i Te Ardhurave:</label>
+                            <input type="number" id="income_amount" name="income_amount" required>
+                        </div>
+                        <div>
+                            <button type="submit" style="font-size: 20px; padding: 10px; margin-top: 10px; background-color: white;border: 1px solid transparent;">Shto te ardhura</button>
+                        </div>
+                    </form>
+                </div>
             </div>
 
-            <div id="listaShpenzimeve" class="tabcontent">
+            <div id="listaTeArdhurave" class="tabcontent">
+                <?php
+
+                $sql = "SELECT * FROM income WHERE client_id = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("i", $_SESSION['user_id']);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                // Sum 
+                $sql_amount = "SELECT SUM(amount) AS total FROM income WHERE client_id = ?";
+                $stmt_amount = $conn->prepare($sql_amount);
+                $stmt_amount->bind_param("i", $_SESSION['user_id']);
+                $stmt_amount->execute();
+                $result_amount = $stmt_amount->get_result();
+
+                ?>
+                <br>
+                <h6>Totali i Te Ardhurave: <?php echo $result_amount->fetch_assoc()['total']; ?></h6>
+                <br>
                 <table>
                     <thead>
                         <tr>
-                            <th>Kategoria</th>
-                            <th>Lloji i Pagesës</th>
-                            <th>Shuma</th>
-                            <th>Action</th>
+                            <th>ID</th>
+                            <th>Totali</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         <?php
 
-                        $sql = "SELECT * FROM expenses WHERE client_id = ?";
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bind_param("i", $_SESSION['user_id']);
-                        $stmt->execute();
-                        $result = $stmt->get_result();
+
 
                         while ($row = $result->fetch_assoc()) {
-                            $category = $row['category'];
-                            $payment_type = $row['payment_type'];
+                            $id = $row['id'];
                             $amount = $row['amount'];
                         ?>
                             <tr>
-                                <td><?php echo $category; ?></td>
-                                <td><?php echo $payment_type; ?></td>
+                                <td><?php echo $id; ?></td>
                                 <td><?php echo $amount; ?></td>
                                 <td>
                                     <!-- Add the delete button -->
                                     <form method="POST" action="">
-                                        <input type="hidden" name="expense_id" value="<?php echo $row['id']; ?>">
-                                        <button type="submit" name="delete_expense" style="background-color: #ff4d4d; color: white; border: none; padding: 5px 10px;">Delete</button>
+                                        <input type="hidden" name="income_id" value="<?php echo $row['id']; ?>">
+                                        <button type="submit" name="delete_income" style="background-color: #ff4d4d; color: white; border: none; padding: 5px 10px;">Delete</button>
                                     </form>
                                 </td>
                             </tr>
@@ -239,7 +234,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_expense'])) {
 
 
         <script>
-            function openCity(evt, cityName) {
+            function tabsStates(evt, cityName) {
                 var i, tabcontent, tablinks;
                 tabcontent = document.getElementsByClassName("tabcontent");
                 for (i = 0; i < tabcontent.length; i++) {
