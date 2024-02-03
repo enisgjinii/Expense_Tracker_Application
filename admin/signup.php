@@ -12,6 +12,8 @@ function registerAdmin($username, $password, $confirmPassword)
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $query = "INSERT INTO admins (username, password) VALUES ('$username', '$hashedPassword')";
         $result = mysqli_query($conn, $query);
+        header("Location: login.php");
+        exit;
         // return "Admini u regjistrua me sukses!";
     }
 }

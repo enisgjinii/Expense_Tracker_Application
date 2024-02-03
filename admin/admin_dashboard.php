@@ -1,96 +1,60 @@
 <?php
 session_start(); // Start the session
-
 // Check if the admin is authenticated
 if (!isset($_SESSION['admin_username']) && !isset($_COOKIE['admin_username'])) {
     header("Location: login.php"); // Redirect to login page if not authenticated
     exit();
 }
-
-// You can retrieve additional admin data or perform other tasks related to the admin dashboard here
-
 ?>
-
 <!DOCTYPE html>
-<html lang="sq">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paneli i Adminit</title>
-
-    <style>
-        body {
-            background-color: #f4f4f4;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        .navbar {
-            background-color: #333;
-            padding: 15px;
-            color: white;
-            text-align: center;
-        }
-
-        .sidebar {
-            height: 100%;
-            width: 250px;
-            position: fixed;
-            background-color: #555;
-            padding-top: 20px;
-        }
-
-        .sidebar a {
-            padding: 16px;
-            text-decoration: none;
-            font-size: 18px;
-            color: white;
-            display: block;
-            text-align: left;
-        }
-
-        .sidebar a:hover {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .content {
-            margin-left: 250px;
-            padding: 20px;
-        }
-
-        h2 {
-            text-align: center;
-        }
-
-        p.welcome-message {
-            text-align: center;
-            font-size: 18px;
-        }
-
-        a.logout-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: #4caf50;
-            text-decoration: none;
-            font-weight: bold;
-        }
-    </style>
+    <link rel="stylesheet" href="style_admin.css">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
-    <?php include 'navbar.php'; ?> <!-- Include the navbar component -->
-    <?php include 'sidebar.php'; ?> <!-- Include the sidebar component -->
-
-    <div class="content">
-        <!-- Your main content goes here -->
-        <h2>Main Content</h2>
-        <p>Here you can add the content for managing users, admins, and other functions.</p>
-    </div>
+    <?php include 'sidebar.php'; ?>
+    <section class="home">
+        <div class="text">Analiza Grafike</div>
+        <div class="text">
+            <div class="container" style="width: 100%;">
+                <canvas id="budgetChart"></canvas>
+            </div>
+        </div>
+    </section>
+    <script src="script.js"></script>
+    <?php include 'footer.php'; ?>
+    <script>
+        // Chart.js
+        var ctx = document.getElementById('budgetChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Income', 'Expenses'],
+                datasets: [{
+                    label: 'Statistics',
+                    data: [<?= $totalIncome; ?>, <?= $totalExpenses; ?>],
+                    backgroundColor: ['rgba(75, 192, 192, 0.7)', 'rgba(255, 99, 132, 0.7)'],
+                    borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+    <script src="../script.js"></script>
 </body>
-z
 
 </html>

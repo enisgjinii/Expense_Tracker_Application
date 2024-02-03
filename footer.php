@@ -1,3 +1,5 @@
 <footer>
-    <p>&copy; 2023 UBT. Të gjitha të drejtat e rezervuara.</p>
+    <p>&copy;
+        <?php echo date("Y"); ?> UBT. Të gjitha të drejtat e rezervuara.
+    </p>
 </footer>

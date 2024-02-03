@@ -1,14 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+session_start();
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log In - Admin</title>
-</head>
+// Include the connection file
+include 'conn.php';
 
-<body>
+// Check if the user is not logged in
+if (empty($_SESSION['admin_username'])) {
+    // Redirect to the login page
+    header('Location: login.php');
+    exit();
+} else {
+    // Redirect to the dashboard
+    header('Location: admin_dashboard.php');
+    exit();
+}
 
-</body>
 
-</html>
+?>
