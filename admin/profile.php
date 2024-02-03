@@ -40,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -48,58 +49,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        .edit_button {
-            appearance: none;
-            background-color: #FAFBFC;
-            border: 1px solid rgba(27, 31, 35, 0.15);
-            border-radius: 6px;
-            box-shadow: rgba(27, 31, 35, 0.04) 0 1px 0, rgba(255, 255, 255, 0.25) 0 1px 0 inset;
+        body {
+            font-family: 'Arial', sans-serif;
+        }
+
+        .home {
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        h5 {
+            color: #333;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: auto;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-top: 5px;
             box-sizing: border-box;
-            color: #24292E;
+        }
+
+        .edit_button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
-            display: inline-block;
-            font-family: -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-            font-size: 14px;
-            font-weight: 500;
-            line-height: 20px;
-            list-style: none;
-            padding: 6px 16px;
-            position: relative;
-            transition: background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1);
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
-            vertical-align: middle;
-            white-space: nowrap;
-            word-wrap: break-word;
+            font-size: 16px;
+            transition: background-color 0.2s ease-in-out;
         }
+
         .edit_button:hover {
-            background-color: #F3F4F6;
-            text-decoration: none;
-            transition-duration: 0.1s;
-        }
-        .edit_button:disabled {
-            background-color: #FAFBFC;
-            border-color: rgba(27, 31, 35, 0.15);
-            color: #959DA5;
-            cursor: default;
-        }
-        .edit_button:active {
-            background-color: #EDEFF2;
-            box-shadow: rgba(225, 228, 232, 0.2) 0 1px 0 inset;
-            transition: none 0s;
-        }
-        .edit_button:focus {
-            outline: 1px transparent;
-        }
-        .edit_button:before {
-            display: none;
-        }
-        .edit_button:-webkit-details-marker {
-            display: none;
+            background-color: #45a049;
         }
     </style>
 </head>
+
 <body>
     <?php include 'sidebar.php'; ?>
     <section class="home">
@@ -107,9 +119,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <hr>
         <div class="text">
             <div class="container">
-                <form method="post" style="font-size: 20px">
+                <form method="post">
                     <div class="form-group">
-                        <label for="username">Emri i përdoruesit:</label>
+                        <label for="username">Emri i përdoruesit:</label>
                         <input type="text" id="username" name="username" value="<?php echo $_SESSION['admin_username']; ?>">
                     </div>
                     <br>
@@ -121,4 +133,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php include 'footer.php'; ?>
     <script src="../script.js"></script>
 </body>
+
 </html>

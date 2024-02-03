@@ -1,3 +1,14 @@
+<?php
+include 'conn.php';
+
+// Fetch company information from the database
+$selectQuery = "SELECT * FROM company_info WHERE id = 1"; // Assuming there is only one row in the table
+$result = mysqli_query($conn, $selectQuery);
+$row = mysqli_fetch_assoc($result);
+
+mysqli_close($conn);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,16 +25,16 @@
 
     <section id="about">
         <h2>Rreth Nesh</h2>
-        <p>Mësoni më shumë për kompaninë tonë dhe çfarë na bën të veçantë.</p>
-        <p>Ne jemi një ekip i përkushtuar që ofron zgjidhje inovative për menaxhimin e shpenzimeve tuaja dhe arritjen e qëllimeve financiare.</p>
-        <p>Angazhimi ynë është të ndihmojmë ju të merrni vendime financiare të informuara dhe të jeni në kontroll të plotë të financave tuaja.</p>
-        <p>Me një vizion për të lehtësuar jetën financiare të përdoruesve tanë, ne jemi këtu për ju çdo hap në rrugën tuaj financiare.</p>
+        <p><strong>Emri i Kompanisë:</strong> <?php echo htmlspecialchars($row['company_name']); ?></p>
+        <p><strong>Adresa:</strong> <?php echo htmlspecialchars($row['address']); ?></p>
+        <p><strong>Numri i Telefonit:</strong> <?php echo htmlspecialchars($row['phone_number']); ?></p>
+        <p><strong>Email:</strong> <?php echo htmlspecialchars($row['email']); ?></p>
+        <p><strong>Website:</strong> <a href="<?php echo htmlspecialchars($row['website']); ?>" target="_blank"><?php echo htmlspecialchars($row['website']); ?></a></p>
+        <p><strong>Informata mbi ne:</strong> <?php echo htmlspecialchars($row['about_us_text']); ?></p>
     </section>
     <section id="mission">
         <h2>Misioni ynë</h2>
-        <p>Misioni ynë është të sjellim inovacion në menaxhimin e financave të përdoruesve tanë duke ofruar zgjidhje të thjeshta, efikase dhe të përshtatshme.</p>
-        <p>Kemi synuar të bëhemi një partner i besueshëm në rrugën tuaj drejt arritjes së qëllimeve financiare dhe stabilitetit.</p>
-        <p>Për ne, suksesi është kur ju arrini suksesin financiar. Bashkohuni me ne në këtë udhëtim!</p>
+        <?php echo isset($row['mission_text']) ? '<p>' . htmlspecialchars($row['mission_text']) . '</p>' : '<p>No mission text available.</p>'; ?>
     </section>
 
     <footer>

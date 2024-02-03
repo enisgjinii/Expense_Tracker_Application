@@ -35,6 +35,18 @@
                         <span class="text nav-text">Profili im</span>
                     </a>
                 </li>
+                <li class="nav-link">
+                    <a href="about_us_page.php">
+                        <i class='bx bx-info-circle icon'></i>
+                        <span class="text nav-text">About us</span>
+                    </a>
+                </li>
+                <li class="nav-link">
+                    <a href="contact_list.php">
+                        <i class='bx bx-message-square-dots icon'></i>
+                        <span class="text nav-text">Formularët e Kontaktit</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <div class="bottom-content">
