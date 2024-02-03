@@ -8,7 +8,8 @@ function authenticateAdmin($username, $password)
     $result = mysqli_query($conn, $query);
     if ($result && mysqli_num_rows($result) > 0) {
         $adminData = mysqli_fetch_assoc($result);
-
+        // Put in session id 
+        $_SESSION['admin_id'] = $adminData['id'];
         // Verify the password
         if (password_verify($password, $adminData['password'])) {
             // Set session and cookie for 24 hours (86400 seconds)

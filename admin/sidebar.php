@@ -3,7 +3,7 @@
         <div class="image-text">
             <br>
             <span class="image">
-                <img src="assets/logo.png" alt="">
+                <img src="../assets/logo.png" alt="">
             </span>
         </div>
         <i class='bx bx-chevron-right toggle'></i>
@@ -14,14 +14,12 @@
                 <li class="nav-link">
                     <a href="admin_dashboard.php">
                         <i class='bx bxs-home icon'></i>
-                        <!-- <i class='bx bxs-user-account'></i> -->
                         <span class="text nav-text">Paneli</span>
                     </a>
                 </li>
                 <li class="nav-link">
                     <a href="list_of_client.php">
                         <i class='bx bxs-user-account icon'></i>
-                        <!-- <i class='bx bxs-user-account'></i> -->
                         <span class="text nav-text">Klientet</span>
                     </a>
                 </li>
@@ -32,15 +30,9 @@
                     </a>
                 </li>
                 <li class="nav-link">
-                    <a href="budget.php">
-                        <i class='bx bx-bell icon'></i>
-                        <span class="text nav-text">Bugjeti</span>
-                    </a>
-                </li>
-                <li class="nav-link">
-                    <a href="analystic.php">
-                        <i class='bx bx-pie-chart-alt icon'></i>
-                        <span class="text nav-text">Analiza</span>
+                    <a href="profile.php">
+                        <i class='bx bx-user icon'></i>
+                        <span class="text nav-text">Profili im</span>
                     </a>
                 </li>
             </ul>
