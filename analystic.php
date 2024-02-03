@@ -99,14 +99,14 @@ class ExpenseManager
 
     public function getTotalExpenses()
     {
-        $result = $this->conn->query("SELECT SUM(amount) as total FROM expenses");
+        $result = $this->conn->query("SELECT SUM(amount) as total FROM expenses WHERE client_id = '$_SESSION[user_id]'");
         $row = $result->fetch_assoc();
         return $row['total'] ?? 0;
     }
 
     public function getTotalIncome()
     {
-        $result = $this->conn->query("SELECT SUM(amount) as total FROM income");
+        $result = $this->conn->query("SELECT SUM(amount) as total FROM income WHERE client_id = '$_SESSION[user_id]'");
         $row = $result->fetch_assoc();
         return $row['total'] ?? 0;
     }
