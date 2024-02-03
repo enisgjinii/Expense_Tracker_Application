@@ -12,6 +12,13 @@
         <div class="menu">
             <ul class="menu-links">
                 <li class="nav-link">
+                    <a href="admin_dashboard.php">
+                        <i class='bx bxs-home icon'></i>
+                        <!-- <i class='bx bxs-user-account'></i> -->
+                        <span class="text nav-text">Paneli</span>
+                    </a>
+                </li>
+                <li class="nav-link">
                     <a href="list_of_client.php">
                         <i class='bx bxs-user-account icon'></i>
                         <!-- <i class='bx bxs-user-account'></i> -->

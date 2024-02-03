@@ -17,6 +17,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($stmt_delete->execute()) {
         echo "User with ID $user_id deleted successfully.";
+        header('Location: list_of_client.php');
+        exit();
     } else {
         echo "Error deleting user.";
     }
